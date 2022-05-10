@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create List</title>
+</head>
+
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    </script>
+    <script>
+        var i=1; 
+        $("#submitlist").on("click", function () {
+                    var listName = $("#listname").val();
+        });
+        $(document).ready(function () {
+                    getList()
+                    createList(listName);
+                });
+         
+        function getList(){
+            var listname = 'demosplist';
+            var gurl = _spPageContextInfo.webAbsoluteUrl+"/_api/web/lists/getbytitle('"+ listname +"')/items";
+            $ajax({
+                url:gurl,
+                type:GET,
+                headers:{
+                    "accept":"application/json; odata=verbose"
+                },
+                success: onSuccess,
+                error: onerror
+            });
+        }
+        function onSuccess(data)
+        {
+            var items = data.d.results;
+            var tableContent = "";
+            for (var i = 0; i < items.length; i++) {
+                tableContent += '<tr>';
+                tableContent += '<td>' + items[i].Sno+ '</td>';
+                tableContent += '<td>' + items[i].Name + '</td>';
+                tableContent += '</tr>';
+            }
+            $('#nameslist').html(tableContent);
+        }
+        function onError(error)
+        {
+            alert(JSON.stringify(error));
+        }
+               
+        
+        function createList(listName) {
+            var listname = 'demosplist';
+            var siteUrl = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('" + listname + "')";
+            var name= document.getElementById("listname").value;
+            
+            $.ajax({
+                url: siteUrl,
+                type: "POST",
+                data: JSON.stringify({
+                    '__metadata': {
+                        'type': 'SP.Data.demosplistListItem'
+                    },
+                    'Sno': i,
+                    'Name': name
+                    
+                }),
+                headers: {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose",
+                    "X-RequestDigest": $("#__REQUESTDIGEST").val(),
+                    "X-HTTP-Method": "POST"
+                },
+                success: onQuerySucceeded,
+                error: onQueryFailed
+            });
+        }
+
+        function onQuerySucceeded(data) {
+            i=i+1;
+            getList();
+            alert("Item added successfully");
+            
+        }
+            
+        
+        function onQueryFailed() {
+            alert('Error!');
+        }
+    </script>
+    <div>
+        <h4>Enter the name</h4>
+        <input type="text" placeholder="Enter Name" id="listname" name="listname">
+        <input type="submit" id="submitlist" value="Submit">
+    </div>
+    <div>
+        <table style="width:100%" border="1 px">
+            <thead>
+                <tr>
+                    <td>S.No</td>
+                    <td>Name</td>
+                </tr>
+            </thead>
+            <tbody id="nameslist">
+
+            </tbody>
+        </table>
+    </div>
+    
+</body>
+<!-- var items = data.d.results;
+            var tableContent = '<table id="nameslist" style="width:100%" border="1 px"><thead><tr><td>SNo:</td>' + '<td>Name</td>'+'</tr></thead><tbody>';
+            for (var i = 0; i < items.length; i++) {
+                tableContent += '<tr>';
+                tableContent += '<td>' + items[i].Sno+ '</td>';
+                tableContent += '<td>' + items[i].Name + '</td>';
+                tableContent += '</tr>';
+            }
+            $('#DisplayList').html(tableContent); -->
+</html>
