@@ -19,7 +19,6 @@
         <table style="width:100%" border="1 px">
             <thead>
                 <tr>
-                    <td>S.No</td>
                     <td>Name</td>
                 </tr>
             </thead>
@@ -47,10 +46,11 @@
                     '__metadata': {
                         'type': 'SP.Data.demosplistListItem'
                     },
-                    'Sno': i,
+                    
                     'Name': name
                     
                 }),
+                async:false,
                 headers: {
                     "accept": "application/json;odata=verbose",
                     "content-type": "application/json;odata=verbose",
