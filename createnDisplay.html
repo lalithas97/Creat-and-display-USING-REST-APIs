@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <!-- HTML CODE -->
     <div>
         <h4>Enter the name</h4>
         <input type="text" placeholder="Enter Name" id="name" name="name">
@@ -18,7 +19,7 @@
         <table style="width:100%" border="1 px">
             <thead>
                 <tr>
-                    
+
                     <td>Name</td>
                 </tr>
             </thead>
@@ -27,87 +28,90 @@
             </tbody>
         </table>
     </div>
-    
-</body>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    </script>
-    <script>
-       
-        $(document).ready(function () {
-                    getList();
-                    createList();
-                });
-         
-        function getList(){
-            var listname = 'demosplist';
-            var gurl = _spPageContextInfo.webAbsoluteUrl+"/_api/web/lists/getbytitle('"+ listname +"')/items";
-            $ajax({
-                url:gurl,
-                type:GET,
-                headers:{
-                    "accept":"application/json; odata=verbose"
-                },
-                success: onSuccess,
-                error: onerror
-            });
-        }
-        function onSuccess(data)
-        {
-            var items = data.d.results;
-            var tableContent = "";
-            for (var i = 0; i < items.length; i++) {
-                tableContent += '<tr>';
-                tableContent += '<td>' + items[i].Name + '</td>';
-                tableContent += '</tr>';
-            }
-            $('#nameslist').html(tableContent);
-        }
-        function onError(error)
-        {
-            alert(JSON.stringify(error));
-        }
-               
-        
-        function createList() {
-            var listname = 'demosplist';
-            var siteUrl = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('" + listname + "')";
-            var name= document.getElementById("listname").value;
-            
-            $.ajax({
-                url: siteUrl,
-                type: "POST",
-                data: JSON.stringify({
-                    '__metadata': {
-                        'type': 'SP.Data.demosplistListItem'
-                    },
-                    
-                    'Name': name
-                    
-                }),
-                headers: {
-                    "accept": "application/json;odata=verbose",
-                    "content-type": "application/json;odata=verbose",
-                    "X-RequestDigest": $("#__REQUESTDIGEST").val(),
-                    "X-HTTP-Method": "POST"
-                },
-                success: onQuerySucceeded,
-                error: onQueryFailed
-            });
-        }
-        
 
-        function onQuerySucceeded(data) {
-           
-            getList();
-            alert("Item added successfully");
-            
+</body>
+<!-- jquery link -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+</script>
+<script>
+    // Defining createitem function 
+    function createitem() {
+
+        getList();
+        createList();
+
+    }
+    // GetItems 
+    function getList() {
+        var listname = 'demosplist';
+        var gurl = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('" + listname + "')/items";
+        $ajax({
+            url: gurl,
+            type: GET,
+            headers: {
+                "accept": "application/json; odata=verbose"
+            },
+            success: onSuccess,
+            error: onerror
+        });
+    }
+
+    function onSuccess(data) {
+        var items = data.d.results;
+        var tableContent = "";
+        for (var i = 0; i < items.length; i++) {
+            tableContent += '<tr>';
+            tableContent += '<td>' + items[i].Name + '</td>';
+            tableContent += '</tr>';
         }
-            
-        
-        function onQueryFailed() {
-            alert('Error!');
-        }
-    </script>
-    
+        $('#nameslist').html(tableContent);
+    }
+
+    function onError(error) {
+        alert(JSON.stringify(error));
+    }
+
+    // defining create item
+    function createList() {
+        var listname = 'demosplist';
+        var siteUrl = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('" + listname + "')";
+        var name = document.getElementById("listname").value;
+
+        $.ajax({
+            url: siteUrl,
+            type: "POST",
+            data: JSON.stringify({
+                '__metadata': {
+                    'type': 'SP.Data.demosplistListItem'
+                },
+
+                'Name': name
+
+            }),
+            headers: {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose",
+                "X-RequestDigest": $("#__REQUESTDIGEST").val(),
+                "X-HTTP-Method": "POST"
+            },
+            success: onQuerySucceeded,
+            error: onQueryFailed
+        });
+    }
+
+
+    function onQuerySucceeded(data) {
+
+        getList();
+        alert("Item added successfully");
+
+    }
+
+
+    function onQueryFailed() {
+        alert('Error!');
+    }
+</script>
+
 
 </html>
